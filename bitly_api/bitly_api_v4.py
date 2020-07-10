@@ -120,6 +120,20 @@ class Connection(object):
         data = self._post('/v4/shorten', payload=payload)
         return data
 
+    def custom_bitlinks(self, bitlink_id, custom_bitlink):
+        """ creates a custom bitly link for a given bitlink
+        @parameter bitlink_id: bitly url id ex: bit.ly/1234abcd
+        @parameter custom_bitlink: full custom domain and path: ex kpiq.io/viz
+        """
+
+        payload = {
+            'bitlink_id': bitlink_id,
+            'custom_bitlink': custom_bitlink
+        }
+
+        data = self._post('/v4/custom_bitlinks', payload=payload)
+        return data
+
     def group_bitlinks(self, group_guid, query=None, size=50, page=1):
         parmas = {
             'size': size,

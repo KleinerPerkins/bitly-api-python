@@ -13,7 +13,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=log_format)
 logger = logging.getLogger(__name__)
 
 BITLY_DOMAIN = os.environ['BITLY_DOMAIN']
-BITLY_GROUP_GUID = ''
+BITLY_GROUP_GUID = os.environ['BITLY_GROUP_GUID']
 
 if __name__ == '__main__':
 
@@ -35,5 +35,9 @@ if __name__ == '__main__':
 
     logger.debug('Short URL:')
     logger.debug(short_url)
+
+    # now try to create a custom link
+    custom_url = bitly.custom_bitlinks(short_url['id'], '{0}/{1}'.format(BITLY_DOMAIN, 'example'))
+    logger.debug(custom_url)
 
     pass
