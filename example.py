@@ -4,10 +4,6 @@ import os
 from bitly_api import v4Connection as Connection
 
 
-from dotenv import load_dotenv
-
-load_dotenv('.env')
-
 log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format=log_format)
 logger = logging.getLogger(__name__)
