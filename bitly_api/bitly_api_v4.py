@@ -134,6 +134,14 @@ class Connection(object):
         data = self._post('/v4/custom_bitlinks', payload=payload)
         return data
 
+    def update_custom_bitlink(self, bitlink_id, custom_bitlink):
+        payload = {
+            'bitlink_id': bitlink_id
+        }
+
+        data = self._patch('/v4/custom_bitlinks/{0}'.format(custom_bitlink), payload=payload)
+        return data
+
     def group_bitlinks(self, group_guid, query=None, size=50, page=1):
         parmas = {
             'size': size,
@@ -194,6 +202,34 @@ class Connection(object):
             headers['Content-Type'] = 'application/json'
 
             response = requests.post(self.host + url, headers=headers, json=payload)
+            code = response.status_code
+            body = response.content.decode('utf-8')
+            if code == 409:
+                raise BitlyError(409, body)
+            if code >= 300:
+                raise BitlyError(500, body)
+
+            if not body.startswith('{'):
+                raise BitlyError(500, body)
+
+            data = json.loads(body)
+            return data
+
+        except URLError as e:
+            raise BitlyError(500, str(e))
+        except HTTPError as e:
+            raise BitlyError(e.code, e.read())
+        except BitlyError:
+            raise
+        except Exception:
+            raise BitlyError(None, sys.exc_info()[1])
+    
+    def _patch(self, url, payload):
+        try:
+            headers = self._headers
+            headers['Content-Type'] = 'application/json'
+
+            response = requests.patch(self.host + url, headers=headers, json=payload)
             code = response.status_code
             body = response.content.decode('utf-8')
             if code >= 300:
